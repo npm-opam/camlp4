@@ -1,0 +1,33 @@
+############################################################################
+#                                                                          #
+#                                   OCaml                                  #
+#                                                                          #
+#          Nicolas Pouillard, projet Gallium, INRIA Rocquencourt           #
+#                                                                          #
+#  Copyright  2007   Institut National de Recherche  en  Informatique et   #
+#  en Automatique.  All rights reserved.  This file is distributed under   #
+#  the terms of the GNU Library General Public License, with the special   #
+#  exception on linking described in LICENSE at the top of the Camlp4      #
+#  source tree.                                                            #
+#                                                                          #
+############################################################################
+
+# Ocamlbuild tags file
+
+# We want -g everywhere it's possible
+true: debug
+
+<camlp4/**/*>: use_import
+<camlp4/**/*.{byte,native}>: use_dynlink
+<camlp4/config/gen_import.*>: use_ocamlcommon
+
+<camlp4/*.{byte,native}>: use_unix
+<camlp4/camlp4boot.*>: -use_unix
+
+<**/*.ml*>: warn_error(A-3)
+
+# The tag "camlp4boot" is for preprocessing using camlp4/boot/camlp4boot.byte
+<camlp4/**/*.ml*>: camlp4boot, warn_Z
+<camlp4/{boot,config}/*>: -camlp4boot
+<camlp4/build/*> or <camlp4/boot/*> or "camlp4/Camlp4/Struct/Lexer.ml": -camlp4boot, -warn_Z, warn_a
+<camlp4/camlp4{,boot,o,r,of,rf,oof,orf}.byte>: -debug
