@@ -1,0 +1,91 @@
+#! /bin/sh
+
+# Try to turn internationalization off
+unset LANG
+unset LC_ALL LC_CTYPE LC_COLLATE LC_MESSAGES LC_MONETARY LC_NUMERIC LC_TIME
+
+set -e
+
+for i in "$@"; do
+  case $i in
+    --bindir=*)
+      BINDIR=${i##*=}
+      ;;
+    --libdir=*)
+      LIBDIR=${i##*=}
+      ;;
+    --pkgdir=*)
+      PKGDIR=${i##*=}
+      ;;
+    *)
+      echo "usage: ./configure [--bindir=<dir>] [--libdir=<dir>] [--pkgdir=<dir>]" 1>&2
+      exit 2
+      ;;
+  esac
+done
+
+# OCaml is already installed, this means we should have everything we
+# need. Just dump its configuration.
+
+ocaml_version=`ocamlc -version`
+major=`echo $ocaml_version | cut -d. -f1`
+minor=`echo $ocaml_version | cut -d. -f2`
+
+if [ $major -lt 4 -o \( $major -eq 4 -a $minor -lt 2 \) ]; then
+    echo "The standalone Camlp4 requires OCaml >= 4.02."
+    echo "For previous versions of OCaml use the Camlp4 distributed with OCaml."
+    exit 2
+elif [ $major -ne 4 -o $minor -ne 2 ]; then
+    echo "This version of Camlp4 is for OCaml 4.02 but you are using OCaml $ocaml_version."
+    echo "If building Camlp4 directly from git, use the $major.$minor branch."
+    exit 2
+fi
+
+ocamlc -config | sed 's/: /="/;s/$/"/' > config.sh
+ocamlc -config | sed 's/^/let /;s/: / = "/;s/$/"/' > myocamlbuild_config.ml
+
+# Add a few things to config.sh
+
+. ./config.sh
+
+if [ "$os_type" = Win32 ]; then
+    ext_exe=".exe"
+else
+    ext_exe=""
+fi
+
+OCAMLC="`which ocamlc`"
+LIBDIR="${LIBDIR:-$standard_library}"
+BINDIR="${BINDIR:-`dirname $OCAMLC`}"
+PKGDIR="${PKGDIR:-$standard_library}"
+
+if [ -x "`which ocamlopt`" ]; then
+    OB_FLAGS=""
+else
+    OB_FLAGS="-byte-plugin"
+fi
+
+COMPLIBS="`ocamlc -where`/compiler-libs"
+if [ -f "$COMPLIBS/opttoploop.cmi" ]; then
+    OCAMLNAT=true
+else
+    OCAMLNAT=false
+fi
+
+cat >> config.sh <<EOF
+A="$ext_lib"
+O="$ext_obj"
+EXE="$ext_exe"
+LIBDIR="$LIBDIR"
+BINDIR="$BINDIR"
+PKGDIR="$PKGDIR"
+OB_FLAGS=$OB_FLAGS
+OCAMLNAT=$OCAMLNAT
+EOF
+
+cat >> myocamlbuild_config.ml <<EOF
+let libdir="$LIBDIR"
+let bindir="$BINDIR"
+let pkgdir="$PKGDIR"
+let ocamlnat=$OCAMLNAT
+EOF
