@@ -4,7 +4,7 @@
         "camlp4_version": {
             "global": true,
             "globalCollisionBehavior": "clobber",
-            "val": "4.4.027"
+            "val": "4.4.04"
         },
         "FINDLIB": {
             "global": true,
@@ -15,7 +15,7 @@
         "version": {
             "global": true,
             "globalCollisionBehavior": "clobber",
-            "val": "4.4.027"
+            "val": "4.4.04"
         },
         "PATH": {
             "global": true,
@@ -34,19 +34,18 @@
             "val": "true"
         }
     },
-    "version": "4.4.027",
+    "version": "4.4.04",
     "dependencies": {
-        "@opam-alpha/conf-which": "*",
-        "dependency-env": "https://github.com/npm-ml/dependency-env.git",
         "substs": "https://github.com/yunxing/substs.git",
         "@opam-alpha/ocamlbuild": "*",
         "nopam": "https://github.com/yunxing/nopam.git",
-        "opam-installer-bin": "https://github.com/yunxing/opam-installer-bin.git"
+        "opam-installer-bin": "https://github.com/yunxing/opam-installer-bin.git",
+        "dependency-env": "https://github.com/npm-ml/dependency-env.git"
     },
     "scripts": {
-        "postinstall": "eval $(dependencyEnv) && nopam && ./configure --bindir=$opam_bin --libdir=$opam_lib/ocaml --pkgdir=$opam_lib && make all && make install install-META && (opam-installer --prefix=$opam_prefix || true)"
+        "postinstall": "eval $(dependencyEnv) && nopam && ./configure --bindir=$opam_bin --libdir=$opam_lib/ocaml --pkgdir=$opam_lib && make clean && make all && make install install-META && (opam-installer --prefix=$opam_prefix || true)"
     },
     "peerDependencies": {
-        "@opam-alpha/ocaml": ">= 4.02.0 < 4.03.0"
+        "@opam-alpha/ocaml": ">= 4.04.0 < 4.05.0"
     }
 }
