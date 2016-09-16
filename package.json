@@ -1,5 +1,5 @@
 {
-    "name": "camlp4-actual",
+    "name": "camlp4",
     "exportedEnvVars": {
         "camlp4_version": {
             "global": true,
