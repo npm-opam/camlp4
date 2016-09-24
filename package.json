@@ -1,0 +1,50 @@
+{
+    "name": "camlp4-actual",
+    "exportedEnvVars": {
+        "camlp4_version": {
+            "global": true,
+            "globalCollisionBehavior": "clobber",
+            "val": "4.4.01"
+        },
+        "FINDLIB": {
+            "global": true,
+            "resolveAsRelativePath": true,
+            "globalCollisionBehavior": "joinPath",
+            "val": "./_build/ocamlfind/lib"
+        },
+        "version": {
+            "global": true,
+            "globalCollisionBehavior": "clobber",
+            "val": "4.4.01"
+        },
+        "PATH": {
+            "global": true,
+            "resolveAsRelativePath": true,
+            "globalCollisionBehavior": "joinPath",
+            "val": "./_build/ocamlfind/bin"
+        },
+        "camlp4_enable": {
+            "global": true,
+            "globalCollisionBehavior": "clobber",
+            "val": "enable"
+        },
+        "camlp4_installed": {
+            "global": true,
+            "globalCollisionBehavior": "clobber",
+            "val": "true"
+        }
+    },
+    "version": "4.4.01",
+    "dependencies": {
+        "substs": "https://github.com/yunxing/substs.git",
+        "nopam": "https://github.com/yunxing/nopam.git",
+        "opam-installer-bin": "https://github.com/yunxing/opam-installer-bin.git",
+        "dependency-env": "https://github.com/npm-ml/dependency-env.git"
+    },
+    "scripts": {
+        "postinstall": "eval $(dependencyEnv) && nopam && (opam-installer --prefix=$opam_prefix || true)"
+    },
+    "peerDependencies": {
+        "@opam-alpha/ocaml": "< 4.02.0"
+    }
+}
