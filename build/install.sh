@@ -110,7 +110,7 @@ installlibdir() {
 }
 
 mkdir -p $BINDIR
-mkdir -p $LIBDIR/camlp4
+# mkdir -p $LIBDIR/camlp4
 
 cd ./_build
 
@@ -133,7 +133,7 @@ installbin camlp4/camlp4r.native$EXE $BINDIR/camlp4r.opt$EXE
 installbin camlp4/camlp4rf.native$EXE $BINDIR/camlp4rf.opt$EXE
 
 cd ./camlp4
-CAMLP4DIR=$LIBDIR/camlp4
+CAMLP4DIR=$LIBDIR/camlp4.install
 for dir in Camlp4Parsers Camlp4Printers Camlp4Filters Camlp4Top; do
   echo "Installing $dir..."
   mkdir -p $CAMLP4DIR/$dir
@@ -163,4 +163,5 @@ if [ "$OCAMLNAT" = "true" ]; then
     camlp4orf$A camlp4r$A camlp4rf$A \
     $CAMLP4DIR
 fi
+mv $CAMLP4DIR $LIBDIR/camlp4
 cd ..
